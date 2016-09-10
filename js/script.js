@@ -116,27 +116,28 @@ function loadAllImages(callback) {
 
 function start () {
   var x = windowX/10;
-  console.log(x)
   var y = 60;
   for(var i = 0; i < imgs.length; i++) {
-    var cx = x+(i*90);
+    var cx = x+(i*120);
     var cy = 0;
-        console.log(cx);
-    if(cx < (windowX - 50)) {
-       cx = cx;
-       cy = 30;
+    if (windowX <= 550) {
+      cx = x+(i*70);
+      cy = 0;
+      positioningImgs(cx,cy);
+
+    }else {
+      cx = x+(i*90);
+      cy = 0;
+      positioningImgs(cx,cy);
     }
-    else {
-       cx = cx-windowX + 70;
-       cy = 120;
-    }
+
 
       // var cy = parseInt(imgArr[i].y);
       Images = new Kinetic.Image({
         x: cx, 
         y: cy,
-        width: windowX/200*20,
-        height: windowX/200*20,
+        width:Math.log2(Math.floor(windowX))*10,
+        height:Math.log2(Math.floor(windowX))*10,
         image: imgs[i],
         draggable:true
         })
@@ -145,6 +146,18 @@ function start () {
   }
     layer.draw();
 }  
+
+function positioningImgs(cx,cy){
+ if(cx < (windowX - 50)) {
+     cx = cx;
+     cy = 30;
+  }
+  else {
+     cx = cx - windowX + 70;
+     cy = 120;
+  }
+
+}
 
 function ImageDRAGGER() {
   Images.on('dragstart', function(e) { 
@@ -208,7 +221,6 @@ function addImage(draggable) {
 }
 
 function rotateEverything(obj,rotateDegree) {
-  console.log(rotateDegree)
   var tween = new Kinetic.Tween({
     node: obj,
     rotationDeg: rotateDegree,
@@ -241,7 +253,8 @@ function changeBoxColor(r2) {
   r2.setStroke("#ff0000");
 }
 
-console.log(windowX/200*20);
+console.log((220*windowX)/1280);
+console.log(Math.log2(Math.floor(windowX))*10);
 
 
 
