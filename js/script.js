@@ -29,8 +29,8 @@ var imgArr = [{src:"img/apple.jpeg",
 var rotateDegree = 0;
 var lineWidth = windowX - 140;
 var lineHeight = 0;
-var rectWidth = lineWidth - (lineWidth/1.5);
-var rectHeight = 100;
+var rectWidth = lineWidth - (lineWidth/1.4);
+var rectHeight = lineWidth - (lineWidth/1.4);
 
 
 var stage = new Kinetic.Stage({
@@ -53,7 +53,7 @@ var Line = new Kinetic.Rect({
 var leftRect = new Kinetic.Rect({
   name:'leftRect',
   x:0,
-  y:-100,
+  y:-rectWidth,
   width:rectWidth,
   height:rectHeight,
   stroke:'black',
@@ -64,7 +64,7 @@ var leftRect = new Kinetic.Rect({
 var rightRect = new Kinetic.Rect({
   name:'rightRect',
   x:lineWidth - rectWidth,
-  y:-100,
+  y:-rectWidth,
   width:rectWidth,
   height:rectHeight,
   stroke:'black',
@@ -73,7 +73,7 @@ var rightRect = new Kinetic.Rect({
 
 var groupLayer = new Kinetic.Rect({
   width:lineWidth,
-  height:-100,
+  height:-rectWidth,
   fill:'#eee',
   name:'seeSaw'
 
@@ -116,28 +116,27 @@ function loadAllImages(callback) {
 
 function start () {
   var x = windowX/10;
+  console.log(x)
   var y = 60;
   for(var i = 0; i < imgs.length; i++) {
-    var cx = x+(i*120);
+    var cx = x+(i*90);
     var cy = 0;
-    if (windowX <= 550) {
-      cx = x+(i*70);
-      cy = 0;
-      positioningImgs(cx,cy);
-
-    }else {
-      cx = x+(i*90);
-      cy = 0;
-      positioningImgs(cx,cy);
+        console.log(cx);
+    if(cx < (windowX - 50)) {
+       cx = cx;
+       cy = 30;
     }
-
+    else {
+       cx = cx-windowX + 50;
+       cy = 120;
+    }
 
       // var cy = parseInt(imgArr[i].y);
       Images = new Kinetic.Image({
         x: cx, 
         y: cy,
-        width:Math.log2(Math.floor(windowX))*10,
-        height:Math.log2(Math.floor(windowX))*10,
+        width: windowX/200*20,
+        height: windowX/200*20,
         image: imgs[i],
         draggable:true
         })
@@ -146,18 +145,6 @@ function start () {
   }
     layer.draw();
 }  
-
-function positioningImgs(cx,cy){
- if(cx < (windowX - 50)) {
-     cx = cx;
-     cy = 30;
-  }
-  else {
-     cx = cx - windowX + 70;
-     cy = 120;
-  }
-
-}
 
 function ImageDRAGGER() {
   Images.on('dragstart', function(e) { 
@@ -221,6 +208,7 @@ function addImage(draggable) {
 }
 
 function rotateEverything(obj,rotateDegree) {
+  console.log(rotateDegree)
   var tween = new Kinetic.Tween({
     node: obj,
     rotationDeg: rotateDegree,
@@ -252,9 +240,6 @@ function prepareForIntersect(r2){
 function changeBoxColor(r2) {
   r2.setStroke("#ff0000");
 }
-
-console.log((220*windowX)/1280);
-console.log(Math.log2(Math.floor(windowX))*10);
 
 
 
