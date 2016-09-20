@@ -3,25 +3,25 @@ var windowY = $(window).height() -40;
 var initCoords= {x:0,y:0};
 var imagesOK = 0;
 var imgs = [];  
-var imgArr = [{src:"img/apple.jpeg",
+var imgArr = [{path:"img/apple.jpeg",
                     x:200,
                     y:30},
-                 {src:"img/logo.png",
+                 {path:"img/logo.png",
                      x:300,
                      y:30},
-                     {src:"img/banana.jpeg",
+                     {path:"img/banana.jpeg",
                      x:300,
                      y:30},
-                     {src:"img/mango.jpeg",
+                     {path:"img/mango.jpeg",
                      x:300,
                      y:30},
-                     {src:"img/onion.jpeg",
+                     {path:"img/onion.jpeg",
                      x:300,
                      y:30},
-                     {src:"img/orange.jpeg",
+                     {path:"img/orange.jpeg",
                      x:300,
                      y:30},
-                    {src:"img/tomato.jpeg",
+                    {path:"img/tomato.jpeg",
                     x:300,
                     y:30}
                     ];
@@ -74,7 +74,6 @@ var rightRect = new Kinetic.Rect({
 var groupLayer = new Kinetic.Rect({
   width:lineWidth,
   height:-rectWidth,
-  fill:'#eee',
   name:'seeSaw'
 
 });
@@ -87,8 +86,6 @@ var rectGroup = new Kinetic.Group({
   offsetX:groupLayer.width()/2,
   offsetY:groupLayer.height()/2
 });
-
-
 
 layer.add(rectGroup);
 rectGroup.add(groupLayer);
@@ -110,18 +107,16 @@ function loadAllImages(callback) {
             callback();
         }            
     };
-    img.src = imgArr[i].src; 
+    img.src = imgArr[i].path; 
   }
 }      
 
 function start () {
   var x = windowX/10;
-  console.log(x)
   var y = 60;
   for(var i = 0; i < imgs.length; i++) {
     var cx = x+(i*90);
     var cy = 0;
-        console.log(cx);
     if(cx < (windowX - 50)) {
        cx = cx;
        cy = 30;
@@ -131,6 +126,7 @@ function start () {
        cy = 120;
     }
 
+
       // var cy = parseInt(imgArr[i].y);
       Images = new Kinetic.Image({
         x: cx, 
@@ -138,6 +134,7 @@ function start () {
         width: windowX/200*20,
         height: windowX/200*20,
         image: imgs[i],
+        path:imgArr[i].path, 
         draggable:true
         })
       layer.add(Images);
@@ -159,21 +156,16 @@ function ImageDRAGGER() {
       var draggable = e.target;
 
       if(intersectRect(draggable, droppableTargets[0]) == true){
-          isDropTrue(draggable, droppableTargets[0])
-          rotateDegree = -30;
-         
-         rotateEverything(rectGroup,rotateDegree);
-
-          console.log(rotateDegree)
-
+        isDropTrue(draggable, droppableTargets[0])
+        rotateDegree = -30;
+        incheightonDrop(draggable,droppableTargets[0])
+        rotateEverything(rectGroup,rotateDegree);
       }
       else 
       if( intersectRect(draggable, droppableTargets2[0]) == true){
         isDropTrue(draggable, droppableTargets2[0])
         rotateDegree = 30;
-        
-      rotateEverything(rectGroup,rotateDegree);
-
+        rotateEverything(rectGroup,rotateDegree);
       }
       else {
        var tween = new Kinetic.Tween({
@@ -208,7 +200,6 @@ function addImage(draggable) {
 }
 
 function rotateEverything(obj,rotateDegree) {
-  console.log(rotateDegree)
   var tween = new Kinetic.Tween({
     node: obj,
     rotationDeg: rotateDegree,
@@ -241,6 +232,22 @@ function changeBoxColor(r2) {
   r2.setStroke("#ff0000");
 }
 
+var leftimgArr = [];
+var uniqueNames = [];
+
+function incheightonDrop(draggable,droppableTargets){
+  leftimgArr.push(draggable.attrs.path);
+  $.each(leftimgArr, function(i, el){
+      if($.inArray(el, uniqueNames) === -1 ) {
+        uniqueNames.push(el);
+        if(uniqueNames.length>1) {
+          var newHeight = droppableTargets.height()+draggable.height()/2;
+          droppableTargets.height(newHeight);
+          droppableTargets.y(-newHeight);
+        } 
+      }
+  });
+}
 
 
 
