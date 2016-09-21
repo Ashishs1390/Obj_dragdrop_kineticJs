@@ -6,7 +6,7 @@ var imgs = [];
 var imgArr = [{path:"img/apple.jpeg",
                     x:200,
                     y:30},
-                 {path:"img/logo.png",
+                    {path:"img/logo.png",
                      x:300,
                      y:30},
                      {path:"img/banana.jpeg",
@@ -24,7 +24,7 @@ var imgArr = [{path:"img/apple.jpeg",
                     {path:"img/tomato.jpeg",
                     x:300,
                     y:30}
-                    ];
+              ];
 
 var rotateDegree = 0;
 var lineWidth = windowX - 140;
@@ -165,6 +165,7 @@ function ImageDRAGGER() {
       if( intersectRect(draggable, droppableTargets2[0]) == true){
         isDropTrue(draggable, droppableTargets2[0])
         rotateDegree = 30;
+        incheightonDrop(draggable,droppableTargets2[0])
         rotateEverything(rectGroup,rotateDegree);
       }
       else {
@@ -175,23 +176,20 @@ function ImageDRAGGER() {
           y: initCoords.y
           }); 
         tween.play();
-
-      }
-     
-          
+      }    
   });
 }
 
 function isDropTrue(draggable,droppableRect) {
-    droppableRect.setStroke("#ff0000");
-    addImage(draggable);
-    var targetW = droppableRect.width();
-    var targetH = droppableRect.height();
-    var targetX = droppableRect.x() + (targetW/2- draggable.width()/2);
-    var targetY = droppableRect.y() + (targetH/2- draggable.height()/2);
+  droppableRect.setStroke("#ff0000");
+  addImage(draggable);
+  var targetW = droppableRect.width();
+  var targetH = droppableRect.height();
+  var targetX = droppableRect.x() + (targetW/2- draggable.width()/2);
+  var targetY = droppableRect.y() + (targetH/2- draggable.height()/2);
 
-    draggable.x(targetX);
-    draggable.y(targetY);
+  draggable.x(targetX);
+  draggable.y(targetY);
 
 }
 
@@ -214,7 +212,6 @@ function rotateEverything(obj,rotateDegree) {
 function intersectRect(r1, r2) {
   prepareForIntersect(r1);
   prepareForIntersect(r2);
-
   return !(r2.left > r1.right || parseInt(r2.right) < r1.left || r2.top > r1.bottom ||parseInt(r2.bottom )< r1.top);
 }
 
@@ -233,19 +230,34 @@ function changeBoxColor(r2) {
 }
 
 var leftimgArr = [];
-var uniqueNames = [];
+var rightimgArr = [];
 
 function incheightonDrop(draggable,droppableTargets){
-  leftimgArr.push(draggable.attrs.path);
-  $.each(leftimgArr, function(i, el){
-      if($.inArray(el, uniqueNames) === -1 ) {
-        uniqueNames.push(el);
-        if(uniqueNames.length>1) {
-          var newHeight = droppableTargets.height()+draggable.height()/2;
-          droppableTargets.height(newHeight);
-          droppableTargets.y(-newHeight);
-        } 
-      }
+  console.log(droppableTargets.name())
+
+  if(droppableTargets.name()=="leftRect") {
+    leftimgArr.push(draggable.attrs.path);
+    console.log(leftimgArr)
+    increaseHeight(leftimgArr,droppableTargets,draggable);
+  }
+  if(droppableTargets.name()=="rightRect") {
+    rightimgArr.push(draggable.attrs.path);
+    console.log(rightimgArr)
+    increaseHeight(rightimgArr,droppableTargets,draggable);
+  }
+}
+
+function increaseHeight(imgArr,droppableTargets,draggable) {
+  var uniqueNames = [];
+  $.each(imgArr, function(i, el){
+    if($.inArray(el, uniqueNames) === -1 ) {
+      uniqueNames.push(el);
+      if(uniqueNames.length>1) {
+        var newHeight = droppableTargets.height()+draggable.height()/2;
+        droppableTargets.height(newHeight);
+        droppableTargets.y(-newHeight);
+      } 
+    }
   });
 }
 
